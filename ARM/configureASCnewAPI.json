@@ -125,7 +125,8 @@
                     "ngfw": "[parameters('securitySettings')]",
                     "vulnerabilityAssessment": "[parameters('securitySettings')]",
                     "storageEncryption": "[parameters('securitySettings')]",
-                    "jitNetworkAccess": "[parameters('securitySettings')]"
+                    "jitNetworkAccess": "[parameters('securitySettings')]",
+                    "appWhitelisting": "[parameters('securitySettings')]"
                 },
                 "pricingConfiguration": {
                     "selectedPricingTier": "Standard"
