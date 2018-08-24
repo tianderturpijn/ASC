@@ -1,0 +1,122 @@
+{
+    "properties": {
+        "data": {
+            "properties": {
+                "context": {
+                    "properties": {
+                        "activityLog": {
+                            "properties": {
+                                "channels": {
+                                    "type": "string"
+                                },
+                                "correlationId": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "eventDataId": {
+                                    "type": "string"
+                                },
+                                "eventSource": {
+                                    "type": "string"
+                                },
+                                "eventTimestamp": {
+                                    "type": "string"
+                                },
+                                "level": {
+                                    "type": "string"
+                                },
+                                "operationId": {
+                                    "type": "string"
+                                },
+                                "operationName": {
+                                    "type": "string"
+                                },
+                                "properties": {
+                                    "properties": {
+                                        "accountSessionId": {
+                                            "type": "string"
+                                        },
+                                        "argumentsAuditingEnabled": {
+                                            "type": "string"
+                                        },
+                                        "attackedResourceType": {
+                                            "type": "string"
+                                        },
+                                        "compromisedEntity": {
+                                            "type": "string"
+                                        },
+                                        "compromisedHost": {
+                                            "type": "string"
+                                        },
+                                        "parentProcess": {
+                                            "type": "string"
+                                        },
+                                        "remediationSteps": {
+                                            "type": "string"
+                                        },
+                                        "resourceType": {
+                                            "type": "string"
+                                        },
+                                        "severity": {
+                                            "type": "string"
+                                        },
+                                        "suspiciousCommandLine": {
+                                            "type": "string"
+                                        },
+                                        "suspiciousProcess": {
+                                            "type": "string"
+                                        },
+                                        "suspiciousProcessId": {
+                                            "type": "string"
+                                        },
+                                        "userName": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "resourceGroupName": {
+                                    "type": "string"
+                                },
+                                "resourceId": {
+                                    "type": "string"
+                                },
+                                "resourceProviderName": {
+                                    "type": "string"
+                                },
+                                "resourceType": {
+                                    "type": "string"
+                                },
+                                "status": {
+                                    "type": "string"
+                                },
+                                "submissionTimestamp": {
+                                    "type": "string"
+                                },
+                                "subscriptionId": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "type": "object"
+                },
+                "properties": {
+                    "properties": {},
+                    "type": "object"
+                },
+                "status": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "schemaId": {
+            "type": "string"
+        }
+    },
+    "type": "object"
+}
