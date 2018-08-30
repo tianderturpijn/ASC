@@ -10,6 +10,19 @@ Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Security | Select-Objec
 Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Security
 #endregion
 
+#region Assign ASC Azure Policy
+#Assign the ASC Azure Policies to a subscription
+$mySub = Get-AzureRmSubscription -SubscriptionName "<mySubscriptionName>"
+$subscription = "/subscriptions/$mySub"
+$policySetDefinition = Get-AzureRmPolicySetDefinition | Where-Object {$_.Properties.DisplayName -eq "[Preview]: Enable Monitoring in Azure Security Center"}
+New-AzureRmPolicyAssignment -PolicySetDefinition $policySetDefinition -Name "<YourAssignmentName>" -Scope $subscription -PolicyParameter "{}"
+
+#Assign the ASC Azure Policies to a resource group
+$resourceGroup = Get-AzureRmResourceGroup -Name "<myResourceGroupName>"
+$policySetDefinition = Get-AzureRmPolicySetDefinition | Where-Object {$_.Properties.DisplayName -eq "[Preview]: Enable Monitoring in Azure Security Center"}
+New-AzureRmPolicyAssignment -PolicySetDefinition $policySetDefinition -Name "<YourAssignmentName>" -Scope $resourceGroup.ResourceId -PolicyParameter "{}"
+#endregion
+
 #region GET Autoprovision settings for subscriptions
 #Get Autoprovision setting for the current scope
 Get-AzureRmSecurityAutoProvisioningSetting
