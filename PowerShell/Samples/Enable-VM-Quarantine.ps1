@@ -123,19 +123,3 @@ foreach($NsgAction in $NsgGroupIDs)
         }
     }
 }
-
-<#
-# Finally we "set" and write back the configuration
-Write-Output "*** Trying to set the new NetWorkSecurityGroup setting ***"
-foreach($NSG in $NsgGroupIDs)
-{
-    try {Set-AzureRmNetworkSecurityGroup -NetworkSecurityGroup $NSG}
-    catch
-    {
-        $ErrorMessage = $_.Exception.Message
-        Write-Output ("*** Something went wrong *** " + $ErrorMessage)
-        break
-    }
-}
-Write-Output "Done!" 
-#>
