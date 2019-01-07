@@ -1,116 +1,116 @@
 #region List all ASC PowerShell commands
-Get-Command -Module AzureRm.Security
+Get-Command -Module Az.Security
 #endregion
 
 #region Azure Microsoft.Security ResourceProvider registration
 #Verify registration
-Get-AzureRmResourceProvider -ProviderNamespace Microsoft.Security | Select-Object ProviderNamespace, Locations, RegistrationState
+Get-AzResourceProvider -ProviderNamespace Microsoft.Security | Select-Object ProviderNamespace, Locations, RegistrationState
 
 #Register the Microsoft.Security resource provider
-Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Security
+Register-AzResourceProvider -ProviderNamespace Microsoft.Security
 #endregion
 
 #region Assign ASC Azure Policy
 #Assign the ASC Azure Policies to a subscription
-$mySub = Get-AzureRmSubscription -SubscriptionName "<mySubscriptionName>"
+$mySub = Get-AzSubscription -SubscriptionName "<mySubscriptionName>"
 $subscription = "/subscriptions/$mySub"
-$policySetDefinition = Get-AzureRmPolicySetDefinition | Where-Object {$_.Properties.DisplayName -eq "[Preview]: Enable Monitoring in Azure Security Center"}
-New-AzureRmPolicyAssignment -PolicySetDefinition $policySetDefinition -Name "<YourAssignmentName>" -Scope $subscription -PolicyParameter "{}"
+$policySetDefinition = Get-AzPolicySetDefinition | Where-Object {$_.Properties.DisplayName -eq "[Preview]: Enable Monitoring in Azure Security Center"}
+New-AzPolicyAssignment -PolicySetDefinition $policySetDefinition -Name "<YourAssignmentName>" -Scope $subscription -PolicyParameter "{}"
 
 #Assign the ASC Azure Policies to a resource group
-$resourceGroup = Get-AzureRmResourceGroup -Name "<myResourceGroupName>"
-$policySetDefinition = Get-AzureRmPolicySetDefinition | Where-Object {$_.Properties.DisplayName -eq "[Preview]: Enable Monitoring in Azure Security Center"}
-New-AzureRmPolicyAssignment -PolicySetDefinition $policySetDefinition -Name "<YourAssignmentName>" -Scope $resourceGroup.ResourceId -PolicyParameter "{}"
+$resourceGroup = Get-AzResourceGroup -Name "<myResourceGroupName>"
+$policySetDefinition = Get-AzPolicySetDefinition | Where-Object {$_.Properties.DisplayName -eq "[Preview]: Enable Monitoring in Azure Security Center"}
+New-AzPolicyAssignment -PolicySetDefinition $policySetDefinition -Name "<YourAssignmentName>" -Scope $resourceGroup.ResourceId -PolicyParameter "{}"
 #endregion
 
 #region GET Autoprovision settings for subscriptions
 #Get Autoprovision setting for the current scope
-Get-AzureRmSecurityAutoProvisioningSetting
+Get-AzSecurityAutoProvisioningSetting
 
 #Get the Autoprovision setting for all Azure subscriptions 
-Get-AzureRmContext -ListAvailable -PipelineVariable myAzureSubs | Set-AzureRmContext | ForEach-Object{
+Get-AzContext -ListAvailable -PipelineVariable myAzureSubs | Set-AzContext | ForEach-Object{
     Write-Output $myAzureSubs
-    Get-AzureRmSecurityAutoProvisioningSetting | Select-Object AutoProvision
+    Get-AzSecurityAutoProvisioningSetting | Select-Object AutoProvision
     "-"*100
 }
 
 #Get the AutoProvision settings based on an input file
 #Get subscriptions from Azure
-$subscriptions = Get-AzureRmSubscription
+$subscriptions = Get-AzSubscription
 
 #Create an output file with all the subscriptions names
 $subscriptions.Name | Out-File "C:\Temp\Subscriptions.txt"
 
 $subscriptionFile = Get-Content -Path "C:\Temp\Subscriptions.txt"
 foreach($subNameFromFile in $subscriptionFile){
-    Select-AzureRmSubscription $subNameFromFile | Out-Null
-    $autoSettings = Get-AzureRmSecurityAutoProvisioningSetting
+    Select-AzSubscription $subNameFromFile | Out-Null
+    $autoSettings = Get-AzSecurityAutoProvisioningSetting
     Write-Output ("SubscriptionName: " + $subNameFromFile + " - AutoProvisionSetting: " + $autoSettings.AutoProvision)
 }
 #endregion
 
 #region SET AutoProvision settings
 #Set AutoProvision to ON for the current scope
-Set-AzureRmSecurityAutoProvisioningSetting -Name "default" -EnableAutoProvision
+Set-AzSecurityAutoProvisioningSetting -Name "default" -EnableAutoProvision
 
 #Set AutoProvision to OFF for the current scope
-Set-AzureRmSecurityAutoProvisioningSetting -Name "default"
+Set-AzSecurityAutoProvisioningSetting -Name "default"
 
 #Set AutoProvision to ON for all subscriptions
-Get-AzureRmContext -ListAvailable -PipelineVariable myAzureSubs | Set-AzureRmContext | ForEach-Object{
-    Set-AzureRmSecurityAutoProvisioningSetting -Name "default" -EnableAutoProvision
+Get-AzContext -ListAvailable -PipelineVariable myAzureSubs | Set-AzContext | ForEach-Object{
+    Set-AzSecurityAutoProvisioningSetting -Name "default" -EnableAutoProvision
 }
 
 #SET Autoprovision setting to ON, using an input file
 $subscriptionFile = Get-Content -Path "C:\temp\Subscriptions.txt"
 foreach($subNameFromFile in $subscriptionFile){
-    Select-AzureRmSubscription $subNameFromFile | Out-Null
+    Select-AzSubscription $subNameFromFile | Out-Null
     Write-Output "Enabling Autoprovision for subscription $subNameFromFile"
-    Set-AzureRmSecurityAutoProvisioningSetting -Name "default" -EnableAutoProvision
+    Set-AzSecurityAutoProvisioningSetting -Name "default" -EnableAutoProvision
 }
 
 #SET Autoprovision setting to OFF, using an input file
 $subscriptionFile = Get-Content -Path "C:\temp\Subscriptions.txt"
 foreach($subNameFromFile in $subscriptionFile){
-    Select-AzureRmSubscription $subNameFromFile | Out-Null
+    Select-AzSubscription $subNameFromFile | Out-Null
     Write-Output "Disabling Autoprovision for subscription $subNameFromFile"
-    Set-AzureRmSecurityAutoProvisioningSetting -Name "default"
+    Set-AzSecurityAutoProvisioningSetting -Name "default"
 }
 #endregion
 
 #region Azure Security Pricing
 #Get current pricing tier
-Get-AzureRmSecurityPricing | Select-Object Name, PricingTier
+Get-AzSecurityPricing | Select-Object Name, PricingTier
 
 #Set Azure Security Center pricing tier for the default scope, use either "Standard" or "Free"
-Set-AzureRmSecurityPricing -Name default -PricingTier "Standard"
+Set-AzSecurityPricing -Name default -PricingTier "Standard"
 
 #region Security Alerts
 #Tip: you can filter out fields of interest by using Select-Object
-Get-AzureRmSecurityAlert
-Get-AzureRmSecurityAlert | Select-Object AlertDisplayName, CompromisedEntity, Description
+Get-AzSecurityAlert
+Get-AzSecurityAlert | Select-Object AlertDisplayName, CompromisedEntity, Description
 #endregion
 
 #region Security Contact information
 #Get the security contact in the current scope
-Get-AzureRmSecurityContact
+Get-AzSecurityContact
 
 #Get all the security contacts
-Get-AzureRmContext -ListAvailable -PipelineVariable myAzureSubs | Set-AzureRmContext | ForEach-Object{
-    Get-AzureRmSecurityContact}
+Get-AzContext -ListAvailable -PipelineVariable myAzureSubs | Set-AzContext | ForEach-Object{
+    Get-AzSecurityContact}
 
 #Set a security contact for the current scope. For the parameter "-Name", you need to use "default1", "default2", etc.
-Set-AzureRmSecurityContact  -Name "default1" -Email "john@johndoe.com" -Phone "12345" -AlertAdmin -NotifyOnAlert
+Set-AzSecurityContact  -Name "default1" -Email "john@johndoe.com" -Phone "12345" -AlertAdmin -NotifyOnAlert
 
 #SET security contacts for all subscriptions (assuming you have the appropriete permissions)
-Get-AzureRmContext -ListAvailable -PipelineVariable myAzureSubs | Set-AzureRmContext | ForEach-Object{
-    Set-AzureRmSecurityContact -Email "john@doe.com" `
+Get-AzContext -ListAvailable -PipelineVariable myAzureSubs | Set-AzContext | ForEach-Object{
+    Set-AzSecurityContact -Email "john@doe.com" `
     -NotifyOnAlert -phone "12345" `
     -Name 'default1' -AlertAdmin }
 #endregion
 
 #region Security Compliance
-$compliance = Get-AzureRmSecurityCompliance   
+$compliance = Get-AzSecurityCompliance   
 
 #example, get the compliance percentage for your subscription
 $compliance[0].AssessmentResult
@@ -118,15 +118,15 @@ $compliance[0].AssessmentResult
 
 #region workspace settings
 #Get the configured workspace for the current scope
-$workspace = Get-AzureRmSecurityWorkspaceSetting
+$workspace = Get-AzSecurityWorkspaceSetting
 
 #display the configured workspaceID and workspaceName
 $workspace.WorkspaceId
 
 #Set the workspace
-#get the workspaceName and workspaceID - this requires the module AzureRm.OperationalInsights
-$workspaceID = Get-AzureRmOperationalInsightsWorkspace -Name "<workspaceName>" -ResourceGroupName "<workspaceResourceGroupName"
-Set-AzureRmSecurityWorkspaceSetting -Name default -WorkspaceId "<workspaceID"
+#get the workspaceName and workspaceID - this requires the module Az.OperationalInsights
+$workspaceID = Get-AzOperationalInsightsWorkspace -Name "<workspaceName>" -ResourceGroupName "<workspaceResourceGroupName"
+Set-AzSecurityWorkspaceSetting -Name default -WorkspaceId "<workspaceID"
 #endregion
 
 

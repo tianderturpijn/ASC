@@ -19,7 +19,7 @@ try
     $servicePrincipalConnection=Get-AutomationConnection -Name $connectionName         
 
     "Logging in to Azure..."
-    Add-AzureRmAccount `
+    Add-AzAccount `
         -ServicePrincipal `
         -TenantId $servicePrincipalConnection.TenantId `
         -ApplicationId $servicePrincipalConnection.ApplicationId `
@@ -48,9 +48,9 @@ $Direction = 'Inbound'
 $RuleName = "Deny-All-Inbound-Traffic"
 $Description = "Rule added by Azure Security Center"
 
-# Getting the AzureRm VM
+# Getting the Az VM
 Write-Output ("Retrieving VM $VMname from Resource Group $ResourceGroupName")
-$VM = Get-AzureRmVm -Name $VMname -ResourceGroupName $ResourceGroupName
+$VM = Get-AzVm -Name $VMname -ResourceGroupName $ResourceGroupName
 
 # We need to query the Network Profile to get the NetworkInterfaceID
 Write-Output "Getting NetworkProfile...."
@@ -61,10 +61,10 @@ $NicIDs = @()
 Write-Output "Getting NetworkInterfaceID's...."
 #We need to loop through the found NetworkInterfaceID's in case we have more than one
 foreach($NicID in $NetworkInterfaceIDs){
-    $NIC = Get-AzureRmNetworkInterface | Where-Object {$_.id -eq $NICid}
+    $NIC = Get-AzNetworkInterface | Where-Object {$_.id -eq $NICid}
     $NicIDs = $NicIDs += $NIC
 }
-#$NIC = Get-AzureRmNetworkInterface | Where-Object {$_.id -eq $NetworkInterfaceIDs}
+#$NIC = Get-AzNetworkInterface | Where-Object {$_.id -eq $NetworkInterfaceIDs}
 
 # Since we now have the NetworkInterfaceID, we can find the NetworkSecurityGroup ID
 $NsgIDs = @()
@@ -78,23 +78,23 @@ foreach($NsgID in $NicIDs.NetworkSecurityGroup.Id){
 $NsgGroupIDs = @()
 Write-Output "Getting NetworkSecurityGroupIDs...."
 foreach($NsgGroupID in $NsgIDs){
-    $NsgGroupID = Get-AzureRmNetworkSecurityGroup | Where-Object {$_.ID -eq $NsgGroupID }
+    $NsgGroupID = Get-AzNetworkSecurityGroup | Where-Object {$_.ID -eq $NsgGroupID }
     $NsgGroupIDs = $NsgGroupIDs += $NsgGroupID
 }
-#$NSG = Get-AzureRmNetworkSecurityGroup | Where-Object {$_.ID -eq $NSGid }
+#$NSG = Get-AzNetworkSecurityGroup | Where-Object {$_.ID -eq $NSGid }
 
 # Uncomment to see all network rule names
 #$NSG.SecurityRules.Name
 
 # Look at (Get) a specific NetworkSecurityRule
-#Get-AzureRmNetworkSecurityRuleConfig -Name "Port_135" -NetworkSecurityGroup $NSG
+#Get-AzNetworkSecurityRuleConfig -Name "Port_135" -NetworkSecurityGroup $NSG
 
 foreach($NsgAction in $NsgGroupIDs)
 {
     if($ScriptAction -eq "Delete")
     {
         Write-Output ("Trying to delete rulename " + $RuleName)
-        try {Remove-AzureRmNetworkSecurityRuleConfig -Name $RuleName -NetworkSecurityGroup $NSG}
+        try {Remove-AzNetworkSecurityRuleConfig -Name $RuleName -NetworkSecurityGroup $NSG}
         catch
         {
             Write-Output "Something went wrong..."
@@ -107,12 +107,12 @@ foreach($NsgAction in $NsgGroupIDs)
         {
             Write-Output ("Trying to add rulename " + $RuleName)
             try {
-                $a = Get-AzureRmNetworkSecurityGroup -Name $Nsgaction.Name -ResourceGroupName $NsgAction.ResourceGroupName
-                Add-AzureRmNetworkSecurityRuleConfig -Name $RuleName -Priority $Priority -DestinationPortRange $Port `
+                $a = Get-AzNetworkSecurityGroup -Name $Nsgaction.Name -ResourceGroupName $NsgAction.ResourceGroupName
+                Add-AzNetworkSecurityRuleConfig -Name $RuleName -Priority $Priority -DestinationPortRange $Port `
                 -Protocol $Protocol -SourcePortRange $Source -DestinationAddressPrefix $Destination `
                 -Access $Action -Direction $Direction -SourceAddressPrefix $Source `
                 -Description $Description -NetworkSecurityGroup $a
-                Set-AzureRmNetworkSecurityGroup -NetworkSecurityGroup $a
+                Set-AzNetworkSecurityGroup -NetworkSecurityGroup $a
             }
             catch
             {
