@@ -24,6 +24,14 @@
             ]
         }
     },
+    "pricingTierStorageAccounts": {
+        "type": "string",
+        "allowedValues": [
+            "Standard",
+            "Free"
+            ]
+        }
+    },
     "resources": [
         {
             "type": "Microsoft.Security/pricings",
@@ -53,6 +61,17 @@
             ],
             "properties":{
                 "pricingTier": "[parameters('pricingTierAppServices')]"
+            }
+        },
+        {
+            "type": "Microsoft.Security/pricings",
+            "apiVersion": "2018-06-01",
+            "name": "StorageAccounts",
+            "dependsOn": [
+                "[concat('Microsoft.Security/pricings/StorageAccounts')]"
+            ],
+            "properties":{
+                "pricingTier": "[parameters('pricingTierStorageAccounts')]"
             }
         }
         
