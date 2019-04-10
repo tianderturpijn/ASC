@@ -31,7 +31,7 @@
           "/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
         ],
         "deployment": {
-          "location": "[parameters('deploymentLocation')]",
+          "location": "westus",
           "properties": {
             "mode": "incremental",
             "template": {
@@ -41,17 +41,14 @@
                 "emailSecurityContact": {
                   "type": "string"
                 },
-                "phoneNumberSecurityContact":{
-                  "type":"string"
+                "phoneNumberSecurityContact": {
+                  "type": "string"
                 },
-                "alertNotifications":{
-                  "type":"string"
+                "alertNotifications": {
+                  "type": "string"
                 },
-                "alertsToAdmins":{
-                  "type":"string"
-                },
-                "deploymentLocation":{
-                  "type":"string"
+                "alertsToAdmins": {
+                  "type": "string"
                 }
               },
               "variables": {},
@@ -62,7 +59,7 @@
                   "apiVersion": "2017-08-01-preview",
                   "properties": {
                     "email": "[parameters('emailSecurityContact')]",
-                    "phone": "12345",
+                    "phone": "[parameters('phoneNumberSecurityContact')]",
                     "alertNotifications": "[parameters('alertNotifications')]",
                     "alertsToAdmins": "[parameters('alertsToAdmins')]"
                   }
@@ -74,17 +71,14 @@
               "emailSecurityContact": {
                 "value": "[parameters('emailSecurityContact')]"
               },
-              "phoneNumberSecurityContact":{
-                "value":"[parameters('phoneNumberSecurityContact')]"
+              "phoneNumberSecurityContact": {
+                "value": "[parameters('phoneNumberSecurityContact')]"
               },
-              "alertNotifications":{
-                "value":"[parameters('alertNotifications')]"
+              "alertNotifications": {
+                "value": "[parameters('alertNotifications')]"
               },
-              "alertsToAdmins":{
-                "value":"[parameters('alertsToAdmins')]"
-              },
-              "deploymentLocation":{
-                "value":"[parameters('deploymentLocation')]"
+              "alertsToAdmins": {
+                "value": "[parameters('alertsToAdmins')]"
               }
             }
           }
@@ -99,39 +93,31 @@
         "displayName": "emailSecurityContact",
         "description": "email address to send ASC alerts"
       },
-      "defaultValue": "tiandert@xwing.nl"
+      "defaultValue": "johndoe@contoso.com"
     },
-    "phoneNumberSecurityContact":{
-      "type": "string",
-      "metadata":{
+    "phoneNumberSecurityContact": {
+      "type": "String",
+      "metadata": {
         "displayName": "Contact phone number",
         "description": "The phone number of the email contact"
       },
       "defaultValue": "12345"
     },
-    "alertNotifications":{
-      "type": "string",
-      "metadata":{
+    "alertNotifications": {
+      "type": "String",
+      "metadata": {
         "displayName": "Alert Notifications On or Off",
         "description": "Set alert notifications on or off"
       },
       "defaultValue": "On"
     },
-    "alertsToAdmins":{
-      "type": "string",
-      "metadata":{
+    "alertsToAdmins": {
+      "type": "String",
+      "metadata": {
         "displayName": "Send alerts to admins, On or Off",
         "description": "Set sending alerts to admins On or Off"
       },
       "defaultValue": "On"
-    },
-    "deploymentLocation":{
-      "type": "string",
-      "metadata":{
-        "displayName": "Location of deployment",
-        "description": "Where the deployment is located"
-      },
-      "defaultValue": "westeurope"
     }
   }
 }
