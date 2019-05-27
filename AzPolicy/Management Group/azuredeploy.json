@@ -1,0 +1,52 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "policyDefinitionName": {
+            "type": "string",
+            "defaultValue": "Tiander-deny-location"
+        },
+        "policyAssignmentName": {
+            "type": "string",
+            "defaultValue": "Tiander-deny-location-assignment"
+        },
+        "mgmtGroupId": {
+            "type": "string",
+            "defaultValue": "top"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policyDefinitions",
+            "name": "[parameters('policyDefinitionName')]",
+            "apiVersion": "2016-12-01",
+            "properties": {
+                "policyType": "Custom",
+                "parameters": {},
+                "policyRule": {
+                    "if": {
+                        "field": "location",
+                        "equals": "northeurope"
+                    },
+                    "then": {
+                        "effect": "deny"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Authorization/policyAssignments",
+            "name": "[parameters('policyAssignmentName')]",
+            "apiVersion": "2016-12-01",
+            "dependsOn": [
+                "[parameters('policyDefinitionName')]"
+            ],
+            "properties": {
+                "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('mgmtGroupId'))]",
+                "policyDefinitionId": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('mgmtGroupId'), 'providers/', 'Microsoft.Authorization/policyDefinitions/', parameters('policyDefinitionName'))]"
+            }
+        }
+    ],
+    "outputs": {}
+}
