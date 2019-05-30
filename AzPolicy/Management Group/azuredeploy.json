@@ -4,15 +4,15 @@
     "parameters": {
       "policyDefinitionName": {
           "type": "string",
-          "defaultValue": "deny-unsecure-websites"
+          "defaultValue": "deny-unsecure-web"
       },
       "policyAssignmentName": {
           "type": "string",
-          "defaultValue": "deny-unsecure-websites"
+          "defaultValue": "assign-deny-unsecure-web"
       },
       "mgmtGroupId": {
           "type": "string",
-          "defaultValue": "top"
+          "defaultValue": "Root"
       }
   },
     "variables": {},
